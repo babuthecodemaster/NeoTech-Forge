@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | NeoTech Forge</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Smooth scrolling for the entire page */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Page transition effect */
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        
+        /* Enhanced auth form */
+        .auth-container {
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .auth-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(127, 90, 240, 0.2);
+        }
+        
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            z-index: 1;
+        }
+        
+        .auth-header {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .auth-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(127, 90, 240, 0.15), transparent);
+            z-index: 0;
+        }
+        
+        .auth-tab.active::after {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(127, 90, 240, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(127, 90, 240, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(127, 90, 240, 0);
+            }
+        }
+        
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.7s ease;
+            z-index: -1;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Transition Effect -->
+    <div class="page-transition" id="pageTransition"></div>
+    
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-microchip"></i>
+                <span>NeoTech Forge</span>
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="nav-links" id="navLinks">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="customize.html" class="nav-link">Build PC</a>
+                <a href="prebuilt.html" class="nav-link">Pre-Built PCs</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="login.html" class="nav-link">Account</a>
+                <a href="cart.html" class="nav-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartCount" class="cart-count">0</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container section">
+        <div class="auth-container">
+            <div class="digital-noise"></div>
+            <div class="auth-header">
+                <h1>Welcome to NeoTech Forge</h1>
+                <p>Sign in to your account or create a new one</p>
+            </div>
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="loginTab">Sign In</button>
+                <button class="auth-tab" id="registerTab">Create Account</button>
+            </div>
+            <div class="auth-forms">
+                <!-- Login Form -->
+                <form id="loginForm" class="auth-form">
+                    <div class="input-group">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" id="username" name="username" placeholder="Username or Email" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="password" name="password" placeholder="Password" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="remember">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                        <a href="#" class="forgot-password">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%;">Sign In</button>
+                    <div class="form-footer">
+                        <p>Don't have an account? <a href="#" id="showRegister">Create one</a></p>
+                    </div>
+                </form>
+                
+                <!-- Register Form -->
+                <form id="registerForm" class="auth-form hidden">
+                    <div class="input-group">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" id="reg-username" name="username" placeholder="Username" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="email" name="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="reg-password" name="password" placeholder="Password" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('reg-password')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('confirm-password')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="terms" required>
+                            <span class="checkmark"></span>
+                            I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%;">Create Account</button>
+                    <div class="form-footer">
+                        <p>Already have an account? <a href="#" id="showLogin">Sign In</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3 class="footer-heading">NeoTech Forge</h3>
+                    <p>Your one-stop shop for custom PC builds and pre-built gaming computers.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-heading">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="index.html">Home</a></li>
+                        <li class="footer-link"><a href="customize.html">Build PC</a></li>
+                        <li class="footer-link"><a href="prebuilt.html">Pre-Built PCs</a></li>
+                        <li class="footer-link"><a href="about.html">About Us</a></li>
+                        <li class="footer-link"><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-heading">Support</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#">FAQs</a></li>
+                        <li class="footer-link"><a href="#">Shipping Policy</a></li>
+                        <li class="footer-link"><a href="#">Return Policy</a></li>
+                        <li class="footer-link"><a href="#">Warranty</a></li>
+                        <li class="footer-link"><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-heading">Contact Us</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link">
+                            <a href="https://www.google.com/maps?q=Pillai+College+of+Engineering+and+Technology,+Navi+Mumbai" target="_blank">
+                                <i class="fas fa-map-marker-alt"></i> Pillai College of Engineering and Technology, Navi Mumbai
+                            </a>
+                        </li>
+                        <li class="footer-link"><i class="fas fa-phone"></i> +91 9028611069</li>
+                        <li class="footer-link"><i class="fas fa-envelope"></i> support@neotechforge.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 NeoTech Forge. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle toast-icon"></i>
+        <div class="toast-content">
+            <p class="toast-message">Item added to cart!</p>
+        </div>
+        <button class="toast-close"><i class="fas fa-times"></i></button>
+    </div>
+
+    <div id="loading" class="loading-spinner" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
+    <script src="animations.js"></script>
+    <script>
+        // Toggle password visibility
+        function togglePassword(fieldId) {
+            const passwordField = document.getElementById(fieldId);
+            const toggleIcon = passwordField.nextElementSibling.querySelector('i');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        // Form toggle functionality
+        document.getElementById('loginTab').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('registerTab').classList.remove('active');
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+        });
+
+        document.getElementById('registerTab').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('loginTab').classList.remove('active');
+            document.getElementById('registerForm').classList.remove('hidden');
+            document.getElementById('loginForm').classList.add('hidden');
+        });
+
+        document.getElementById('showRegister').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('registerTab').click();
+        });
+
+        document.getElementById('showLogin').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('loginTab').click();
+        });
+
+        // Signup functionality
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('reg-username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('reg-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            // Validate inputs
+            if (!username || !email || !password || !confirmPassword) {
+                showToast('error', 'All fields are required!');
+                return;
+            }
+            if (password !== confirmPassword) {
+                showToast('error', 'Passwords do not match!');
+                return;
+            }
+
+            // Save user data in localStorage
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            if (users.some(user => user.email === email)) {
+                showToast('error', 'Email is already registered!');
+                return;
+            }
+
+            users.push({ username, email, password });
+            localStorage.setItem('users', JSON.stringify(users));
+            showToast('success', 'Account created successfully! Redirecting to login...');
+            
+            // Redirect to login after 2 seconds
+            setTimeout(() => {
+                document.getElementById('loginTab').click();
+            }, 2000);
+        });
+
+        // Login functionality
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const usernameOrEmail = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            // Validate inputs
+            if (!usernameOrEmail || !password) {
+                showToast('error', 'All fields are required!');
+                return;
+            }
+
+            // Check credentials
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(user => 
+                (user.email === usernameOrEmail || user.username === usernameOrEmail) && user.password === password
+            );
+
+            if (!user) {
+                showToast('error', 'Invalid username/email or password!');
+                return;
+            }
+
+            // Save logged-in user info
+            localStorage.setItem('loggedInUser', JSON.stringify(user));
+            showToast('success', 'Login successful! Redirecting to cart...');
+            
+            // Redirect to cart or another page
+            setTimeout(() => {
+                window.location.href = 'cart.html';
+            }, 2000);
+        });
+
+        // Toast notification
+        function showToast(type, message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.querySelector('.toast-message');
+            const toastIcon = document.querySelector('.toast-icon');
+            
+            // Set message
+            toastMessage.textContent = message;
+            
+            // Set type
+            toast.className = 'toast';
+            toast.classList.add('show');
+            
+            if (type === 'success') {
+                toast.classList.add('toast-success');
+                toastIcon.className = 'fas fa-check-circle toast-icon';
+            } else if (type === 'error') {
+                toast.classList.add('toast-error');
+                toastIcon.className = 'fas fa-exclamation-circle toast-icon';
+            } else if (type === 'warning') {
+                toast.classList.add('toast-warning');
+                toastIcon.className = 'fas fa-exclamation-triangle toast-icon';
+            }
+            
+            // Show toast
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        document.querySelector('.toast-close').addEventListener('click', function() {
+            document.getElementById('toast').classList.remove('show');
+        });
+
+        // Smooth page transitions
+        document.addEventListener('DOMContentLoaded', function() {
+            const pageTransition = document.getElementById('pageTransition');
+            const links = document.querySelectorAll('a[href]:not([href^="#"]):not([target="_blank"])');
+            
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href.indexOf('#') !== 0 && href.indexOf('://') === -1) {
+                        e.preventDefault();
+                        pageTransition.style.opacity = 1;
+                        
+                        setTimeout(() => {
+                            window.location.href = href;
+                        }, 500);
+                    }
+                });
+            });
+            
+            // Hide transition overlay when page loads
+            window.addEventListener('pageshow', function() {
+                pageTransition.style.opacity = 0;
+            });
+            
+            // Update cart count
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            document.getElementById('cartCount').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+        });
+    </script>
+</body>
+</html>
+

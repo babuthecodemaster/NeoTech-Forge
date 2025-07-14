@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Build Your PC | NeoTech Forge</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <style>
+        /* Ensure mobile menu works correctly */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background-color: var(--surface);
+                flex-direction: column;
+                padding: 1.5rem;
+                gap: 1rem;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                transform: translateY(-100%);
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.3s ease;
+                z-index: 1000;
+            }
+            
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: auto;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                color: #fff;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+
+        .btn-primary:hover {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(127, 90, 240, 0.5), rgba(255, 255, 255, 0.2));
+            z-index: 1;
+            animation: glow 1.5s infinite alternate;
+        }
+
+        .btn-primary:hover i, .btn-primary:hover span {
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 0 10px rgba(127, 90, 240, 0.8), 0 0 20px rgba(127, 90, 240, 0.6);
+        }
+
+        @keyframes glow {
+            from {
+                opacity: 0.5;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Transition Effect -->
+    <div class="page-transition" id="pageTransition"></div>
+    
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-microchip"></i>
+                <span>NeoTech Forge</span>
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="nav-links" id="navLinks">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="customize.html" class="nav-link">Build PC</a>
+                <a href="prebuilt.html" class="nav-link">Pre-Built PCs</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="login.html" class="nav-link">Account</a>
+                <a href="cart.html" class="nav-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartCount" class="cart-count">0</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container section">
+        <div class="page-header">
+            <h1>Build Your Custom PC</h1>
+            <p>Select components to create your dream machine</p>
+        </div>
+
+        <div class="search-bar">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="componentSearch" placeholder="Search for components...">
+        </div>
+
+        <div class="pc-builder">
+            <div class="build-summary">
+                <h2>Your Build</h2>
+                <div class="build-stats">
+                    <div class="stat">
+                        <i class="fas fa-bolt"></i>
+                        <span>Power: <span id="totalPower">0</span>W</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span>Total: ₹<span id="totalPrice">0</span></span>
+                    </div>
+                </div>
+                <div class="selected-components" id="selectedComponents">
+                    <!-- Selected components will be displayed here -->
+                    <div class="empty-selection">
+                        <i class="fas fa-desktop"></i>
+                        <p>Start selecting components below</p>
+                    </div>
+                </div>
+                <button class="btn-primary" id="checkoutBtn" disabled>
+                    <i class="fas fa-shopping-cart"></i> Proceed to Checkout
+                </button>
+            </div>
+
+            <!-- CPU Section -->
+            <div class="component-category">
+                <div class="component-header">
+                    <h2><i class="fas fa-microchip"></i> Processor (CPU)</h2>
+                    <button class="btn-secondary view-all-btn">View All</button>
+                </div>
+                <div class="swiper component-slider">
+                    <div class="swiper-wrapper component-list">
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/ryzen_7_5800x.png" alt="AMD Ryzen 7 5800X" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">AMD Ryzen 7 5800X</h3>
+                                <p class="card-price">₹28874.18</p>
+                                <div class="card-specs">
+                                    <p>8 Cores, 16 Threads</p>
+                                    <p>3.8GHz Base, 4.7GHz Boost</p>
+                                    <p>105W TDP</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="cpu" data-id="1" data-name="AMD Ryzen 7 5800X" data-price="349.99" data-power="105">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/intel_core_i7_12700k.png" alt="Intel Core i7-12700K" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">Intel Core i7-12700K</h3>
+                                <p class="card-price">₹32174.18</p>
+                                <div class="card-specs">
+                                    <p>12 Cores (8P+4E), 20 Threads</p>
+                                    <p>3.6GHz Base, 5.0GHz Boost</p>
+                                    <p>125W TDP</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="cpu" data-id="2" data-name="Intel Core i7-12700K" data-price="389.99" data-power="125">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/amd ryzen.png" alt="AMD Ryzen 9 5950X" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">AMD Ryzen 9 5950X</h3>
+                                <p class="card-price">₹45374.18</p>
+                                <div class="card-specs">
+                                    <p>16 Cores, 32 Threads</p>
+                                    <p>3.4GHz Base, 4.9GHz Boost</p>
+                                    <p>105W TDP</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="cpu" data-id="3" data-name="AMD Ryzen 9 5950X" data-price="549.99" data-power="105">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                        <div class="swiper-slide component-card" data-component-id="4" data-name="Intel Core i9-12900K" data-price="589.99" data-power="125">
+                            <div class="digital-noise"></div>
+                            <img src="imgs/inteli9.png" alt="Intel Core i9-12900K" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">Intel Core i9-12900K</h3>
+                                <p class="card-price">₹48674.18</p>
+                                <div class="card-specs">
+                                    <p>16 Cores (8P+8E), 24 Threads</p>
+                                    <p>Up to 5.2GHz</p>
+                                    <p>125W TDP</p>
+                                </div>
+                                <button class="btn-primary add-component-btn" data-component="cpu">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Motherboard Section -->
+            <div class="component-category">
+                <div class="component-header">
+                    <h2><i class="fas fa-server"></i> Motherboard</h2>
+                    <button class="btn-secondary view-all-btn">View All</button>
+                </div>
+                <div class="swiper component-slider">
+                    <div class="swiper-wrapper component-list">
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/asus.png" alt="ASUS ROG Strix B550-F" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">ASUS ROG Strix B550-F</h3>
+                                <p class="card-price">$179.99</p>
+                                <div class="card-specs">
+                                    <p>AMD AM4 Socket</p>
+                                    <p>ATX Form Factor</p>
+                                    <p>PCIe 4.0, WiFi 6</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="motherboard" data-id="1" data-name="ASUS ROG Strix B550-F" data-price="179.99" data-power="15">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/msi.png" alt="MSI MPG Z690 Edge" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">MSI MPG Z690 Edge</h3>
+                                <p class="card-price">$289.99</p>
+                                <div class="card-specs">
+                                    <p>Intel LGA 1700 Socket</p>
+                                    <p>ATX Form Factor</p>
+                                    <p>PCIe 5.0, DDR5</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="motherboard" data-id="2" data-name="MSI MPG Z690 Edge" data-price="289.99" data-power="20">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/giga.png" alt="Gigabyte X570 Aorus Elite" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">Gigabyte X570 Aorus Elite</h3>
+                                <p class="card-price">$219.99</p>
+                                <div class="card-specs">
+                                    <p>AMD AM4 Socket</p>
+                                    <p>ATX Form Factor</p>
+                                    <p>PCIe 4.0, RGB Fusion</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="motherboard" data-id="3" data-name="Gigabyte X570 Aorus Elite" data-price="219.99" data-power="18">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GPU Section -->
+            <div class="component-category">
+                <div class="component-header">
+                    <h2><i class="fas fa-tv"></i> Graphics Card (GPU)</h2>
+                    <button class="btn-secondary view-all-btn">View All</button>
+                </div>
+                <div class="swiper component-slider">
+                    <div class="swiper-wrapper component-list">
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/nvidia 3070.png" alt="NVIDIA RTX 3070" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">NVIDIA RTX 3070</h3>
+                                <p class="card-price">₹599.99</p>
+                                <div class="card-specs">
+                                    <p>8GB GDDR6</p>
+                                    <p>1.73 GHz Boost Clock</p>
+                                    <p>220W TDP</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="gpu" data-id="1" data-name="NVIDIA RTX 3070" data-price="599.99" data-power="220">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/amda rx.png" alt="AMD Radeon RX 6800 XT" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">AMD Radeon RX 6800 XT</h3>
+                                <p class="card-price">$649.99</p>
+                                <div class="card-specs">
+                                    <p>16GB GDDR6</p>
+                                    <p>2.25 GHz Boost Clock</p>
+                                    <p>300W TDP</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="gpu" data-id="2" data-name="AMD Radeon RX 6800 XT" data-price="649.99" data-power="300">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/nividia 3080.png" alt="NVIDIA RTX 3080" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">NVIDIA RTX 3080</h3>
+                                <p class="card-price">$799.99</p>
+                                <div class="card-specs">
+                                    <p>10GB GDDR6X</p>
+                                    <p>1.71 GHz Boost Clock</p>
+                                    <p>320W TDP</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="gpu" data-id="3" data-name="NVIDIA RTX 3080" data-price="799.99" data-power="320">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/amd 6800.png" alt="AMD Radeon RX 6900 XT" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">AMD Radeon RX 6900 XT</h3>
+                                <p class="card-price">$999.99</p>
+                                <div class="card-specs">
+                                    <p>16GB GDDR6</p>
+                                    <p>2.25 GHz Boost Clock</p>
+                                    <p>300W TDP</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="gpu" data-id="4" data-name="AMD Radeon RX 6900 XT" data-price="999.99" data-power="300">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RAM Section -->
+            <div class="component-category">
+                <div class="component-header">
+                    <h2><i class="fas fa-memory"></i> Memory (RAM)</h2>
+                    <button class="btn-secondary view-all-btn">View All</button>
+                </div>
+                <div class="swiper component-slider">
+                    <div class="swiper-wrapper component-list">
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/corsair veng.png" alt="Corsair Vengeance RGB Pro 16GB" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">Corsair Vengeance RGB Pro 16GB</h3>
+                                <p class="card-price">₹89.99</p>
+                                <div class="card-specs">
+                                    <p>2x8GB DDR4</p>
+                                    <p>3200MHz</p>
+                                    <p>RGB Lighting</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="ram" data-id="1" data-name="Corsair Vengeance RGB Pro 16GB" data-price="89.99" data-power="10">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/tridentz.png" alt="G.Skill Trident Z RGB 32GB" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">G.Skill Trident Z RGB 32GB</h3>
+                                <p class="card-price">$159.99</p>
+                                <div class="card-specs">
+                                    <p>2x16GB DDR4</p>
+                                    <p>3600MHz</p>
+                                    <p>RGB Lighting</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="ram" data-id="2" data-name="G.Skill Trident Z RGB 32GB" data-price="159.99" data-power="12">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/kingston.png" alt="Kingston FURY Beast 16GB" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">Kingston FURY Beast 16GB</h3>
+                                <p class="card-price">$79.99</p>
+                                <div class="card-specs">
+                                    <p>2x8GB DDR4</p>
+                                    <p>3200MHz</p>
+                                    <p>Low Profile</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="ram" data-id="3" data-name="Kingston FURY Beast 16GB" data-price="79.99" data-power="8">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Storage Section -->
+            <div class="component-category">
+                <div class="component-header">
+                    <h2><i class="fas fa-hdd"></i> Storage</h2>
+                    <button class="btn-secondary view-all-btn">View All</button>
+                </div>
+                <div class="swiper component-slider">
+                    <div class="swiper-wrapper component-list">
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/samsung.png" alt="Samsung 970 EVO Plus 1TB" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">Samsung 970 EVO Plus 1TB</h3>
+                                <p class="card-price">$129.99</p>
+                                <div class="card-specs">
+                                    <p>NVMe M.2 SSD</p>
+                                    <p>3,500 MB/s Read</p>
+                                    <p>3,300 MB/s Write</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="storage" data-id="1" data-name="Samsung 970 EVO Plus 1TB" data-price="129.99" data-power="5">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/wd.png" alt="WD Black SN850 2TB" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">WD Black SN850 2TB</h3>
+                                <p class="card-price">$249.99</p>
+                                <div class="card-specs">
+                                    <p>NVMe M.2 SSD</p>
+                                    <p>7,000 MB/s Read</p>
+                                    <p>5,300 MB/s Write</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="storage" data-id="2" data-name="WD Black SN850 2TB" data-price="249.99" data-power="7">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/seagate.png" alt="Seagate Barracuda 4TB" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">Seagate Barracuda 4TB</h3>
+                                <p class="card-price">$89.99</p>
+                                <div class="card-specs">
+                                    <p>3.5" HDD</p>
+                                    <p>5400 RPM</p>
+                                    <p>256MB Cache</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="storage" data-id="3" data-name="Seagate Barracuda 4TB" data-price="89.99" data-power="10">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Power Supply Section -->
+            <div class="component-category">
+                <div class="component-header">
+                    <h2><i class="fas fa-plug"></i> Power Supply</h2>
+                    <button class="btn-secondary view-all-btn">View All</button>
+                </div>
+                <div class="swiper component-slider">
+                    <div class="swiper-wrapper component-list">
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/corsair rm.png" alt="Corsair RM750x" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">Corsair RM750x</h3>
+                                <p class="card-price">$129.99</p>
+                                <div class="card-specs">
+                                    <p>750W</p>
+                                    <p>80+ Gold</p>
+                                    <p>Fully Modular</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="psu" data-id="1" data-name="Corsair RM750x" data-price="129.99" data-power="0" data-capacity="750">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/evga.png" alt="EVGA SuperNOVA 850 G5" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">EVGA SuperNOVA 850 G5</h3>
+                                <p class="card-price">$149.99</p>
+                                <div class="card-specs">
+                                    <p>850W</p>
+                                    <p>80+ Gold</p>
+                                    <p>Fully Modular</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="psu" data-id="2" data-name="EVGA SuperNOVA 850 G5" data-price="149.99" data-power="0" data-capacity="850">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/focus.png" alt="Seasonic FOCUS GX-1000" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">Seasonic FOCUS GX-1000</h3>
+                                <p class="card-price">$189.99</p>
+                                <div class="card-specs">
+                                    <p>1000W</p>
+                                    <p>80+ Gold</p>
+                                    <p>Fully Modular</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="psu" data-id="3" data-name="Seasonic FOCUS GX-1000" data-price="189.99" data-power="0" data-capacity="1000">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cooling Section -->
+            <div class="component-category">
+                <div class="component-header">
+                    <h2><i class="fas fa-wind"></i> CPU Cooling</h2>
+                    <button class="btn-secondary view-all-btn">View All</button>
+                </div>
+                <div class="swiper component-slider">
+                    <div class="swiper-wrapper component-list">
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/nzxt.png" alt="NZXT Kraken X63" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">NZXT Kraken X63</h3>
+                                <p class="card-price">$149.99</p>
+                                <div class="card-specs">
+                                    <p>280mm AIO</p>
+                                    <p>RGB Infinity Mirror</p>
+                                    <p>CAM Software Control</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="cooling" data-id="1" data-name="NZXT Kraken X63" data-price="149.99" data-power="5">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/cosair icue.png" alt="Corsair iCUE H150i ELITE CAPELLIX" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">Corsair iCUE H150i ELITE</h3>
+                                <p class="card-price">$189.99</p>
+                                <div class="card-specs">
+                                    <p>360mm AIO</p>
+                                    <p>RGB Pump Head & Fans</p>
+                                    <p>iCUE Software Control</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="cooling" data-id="2" data-name="Corsair iCUE H150i ELITE" data-price="189.99" data-power="6">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/noctua nh.png" alt="Noctua NH-D15" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">Noctua NH-D15</h3>
+                                <p class="card-price">$99.99</p>
+                                <div class="card-specs">
+                                    <p>Dual Tower Air Cooler</p>
+                                    <p>Dual 140mm Fans</p>
+                                    <p>Silent Operation</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="cooling" data-id="3" data-name="Noctua NH-D15" data-price="99.99" data-power="0">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Case Section -->
+            <div class="component-category">
+                <div class="component-header">
+                    <h2><i class="fas fa-box"></i> PC Case</h2>
+                    <button class="btn-secondary view-all-btn">View All</button>
+                </div>
+                <div class="swiper component-slider">
+                    <div class="swiper-wrapper component-list">
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/nzxt_h510.png" alt="NZXT H510" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">NZXT H510</h3>
+                                <p class="card-price">$89.99</p>
+                                <div class="card-specs">
+                                    <p>Mid Tower</p>
+                                    <p>Tempered Glass</p>
+                                    <p>Cable Management</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="case" data-id="1" data-name="NZXT H510" data-price="89.99" data-power="0">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                        <div class="swiper-slide component-card card">
+                            <img src="imgs/corsair_4000d.png" alt="Corsair 4000D Airflow" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">Corsair 4000D Airflow</h3>
+                                <p class="card-price">$94.99</p>
+                                <div class="card-specs">
+                                    <p>Mid Tower</p>
+                                    <p>High Airflow Design</p>
+                                    <p>Easy Cable Management</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="case" data-id="2" data-name="Corsair 4000D Airflow" data-price="94.99" data-power="0">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                        <div class="swiper-slide component-card card">
+                            <img src="lian_li_o11.png" alt="Lian Li O11 Dynamic" class="card-img">
+                            <div class="card-content">
+                                <h3 class="card-title">Lian Li O11 Dynamic</h3>
+                                <p class="card-price">$149.99</p>
+                                <div class="card-specs">
+                                    <p>Mid Tower</p>
+                                    <p>Dual Chamber Design</p>
+                                    <p>Tempered Glass Panels</p>
+                                </div>
+                                <button class="btn-primary select-component" data-component="case" data-id="3" data-name="Lian Li O11 Dynamic" data-price="149.99" data-power="0">
+                                    <i class="fas fa-plus"></i> Select
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3 class="footer-heading">NeoTech Forge</h3>
+                    <p>Your one-stop shop for custom PC builds and pre-built gaming computers.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-heading">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="index.html">Home</a></li>
+                        <li class="footer-link"><a href="customize.html">Build PC</a></li>
+                        <li class="footer-link"><a href="prebuilt.html">Pre-Built PCs</a></li>
+                        <li class="footer-link"><a href="about.html">About Us</a></li>
+                        <li class="footer-link"><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-heading">Support</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#">FAQs</a></li>
+                        <li class="footer-link"><a href="#">Shipping Policy</a></li>
+                        <li class="footer-link"><a href="#">Return Policy</a></li>
+                        <li class="footer-link"><a href="#">Warranty</a></li>
+                        <li class="footer-link"><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-heading">Contact Us</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link">
+                            <a href="https://www.google.com/maps?q=Pillai+College+of+Engineering+and+Technology,+Navi+Mumbai" target="_blank">
+                                <i class="fas fa-map-marker-alt"></i> Pillai College of Engineering and Technology, Navi Mumbai
+                            </a>
+                        </li>
+                        <li class="footer-link"><i class="fas fa-phone"></i> +91 9028611069</li>
+                        <li class="footer-link"><i class="fas fa-envelope"></i> support@neotechforge.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 NeoTech Forge. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle toast-icon"></i>
+        <div class="toast-content">
+            <p class="toast-message">Component added to your build!</p>
+        </div>
+        <button class="toast-close"><i class="fas fa-times"></i></button>
+    </div>
+
+    <div id="loading" class="loading-spinner" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script>
+        // Direct mobile menu toggle for better reliability
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const icon = mobileMenuBtn.querySelector('i');
+            
+            navLinks.classList.toggle('active');
+            
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.replace('fa-bars', 'fa-times');
+            } else {
+                icon.classList.replace('fa-times', 'fa-bars');
+            }
+        }
+        
+        // Initialize Swiper sliders
+        const swipers = document.querySelectorAll('.component-slider');
+        swipers.forEach(slider => {
+            new Swiper(slider, {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                breakpoints: {
+                    640: {
+                        slidesPerView: 2,
+                    },
+                    1024: {
+                        slidesPerView: 3,
+                    }
+                }
+            });
+        });
+
+        // PC Builder functionality
+        const selectedComponents = {};
+        let totalPrice = 0;
+        let totalPower = 0;
+
+        // Select component
+        document.querySelectorAll('.select-component').forEach(button => {
+            button.addEventListener('click', function() {
+                const component = this.dataset.component;
+                const id = this.dataset.id;
+                const name = this.dataset.name;
+                const price = parseFloat(this.dataset.price);
+                const power = parseFloat(this.dataset.power || 0);
+                
+                // If replacing a component, subtract its price and power
+                if (selectedComponents[component]) {
+                    totalPrice -= parseFloat(selectedComponents[component].price);
+                    totalPower -= parseFloat(selectedComponents[component].power || 0);
+                }
+                
+                // Add new component
+                selectedComponents[component] = {
+                    id,
+                    name,
+                    price,
+                    power
+                };
+                
+                // Update totals
+                totalPrice += price;
+                totalPower += power;
+                
+                // Update UI
+                updateBuildSummary();
+                
+                // Show toast
+                showToast('success', `${name} added to your build!`);
+            });
+        });
+
+        // Update build summary
+        function updateBuildSummary() {
+            const container = document.getElementById('selectedComponents');
+            const totalPriceElement = document.getElementById('totalPrice');
+            const totalPowerElement = document.getElementById('totalPower');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            
+            // Clear container
+            container.innerHTML = '';
+            
+            // Add selected components
+            if (Object.keys(selectedComponents).length === 0) {
+                container.innerHTML = `
+                    <div class="empty-selection">
+                        <i class="fas fa-desktop"></i>
+                        <p>Start selecting components below</p>
+                    </div>
+                `;
+                checkoutBtn.disabled = true;
+            } else {
+                for (const [type, component] of Object.entries(selectedComponents)) {
+                    const componentElement = document.createElement('div');
+                    componentElement.className = 'selected-component';
+                    componentElement.innerHTML = `
+                        <div class="component-info">
+                            <span class="component-type">${getComponentTypeName(type)}</span>
+                            <span class="component-name">${component.name}</span>
+                        </div>
+                        <div class="component-price">₹${(component.price * 82.5).toFixed(2)}</div>
+                        <button class="remove-component" data-component="${type}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    container.appendChild(componentElement);
+                }
+                
+                // Enable checkout if we have the minimum required components
+                const requiredComponents = ['cpu', 'motherboard', 'ram', 'storage', 'psu', 'case'];
+                const hasRequiredComponents = requiredComponents.every(comp => selectedComponents[comp]);
+                checkoutBtn.disabled = !hasRequiredComponents;
+            }
+            
+            // Update totals
+            totalPriceElement.textContent = (totalPrice * 82.5).toFixed(2);
+            totalPowerElement.textContent = totalPower;
+            
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.remove-component').forEach(button => {
+                button.addEventListener('click', function() {
+                    const component = this.dataset.component;
+                    removeComponent(component);
+                });
+            });
+        }
+
+        // Remove component
+        function removeComponent(type) {
+            if (selectedComponents[type]) {
+                totalPrice -= parseFloat(selectedComponents[type].price);
+                totalPower -= parseFloat(selectedComponents[type].power || 0);
+                delete selectedComponents[type];
+                updateBuildSummary();
+                showToast('warning', 'Component removed from your build');
+            }
+        }
+
+        // Get component type name
+        function getComponentTypeName(type) {
+            const types = {
+                cpu: 'Processor',
+                motherboard: 'Motherboard',
+                gpu: 'Graphics Card',
+                ram: 'Memory',
+                storage: 'Storage',
+                psu: 'Power Supply',
+                cooling: 'CPU Cooling',
+                case: 'Case'
+            };
+            return types[type] || type;
+        }
+
+        // Component search
+        document.getElementById('componentSearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            document.querySelectorAll('.component-card').forEach(card => {
+                const title = card.querySelector('.card-title').textContent.toLowerCase();
+                const specs = card.querySelector('.card-specs').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || specs.includes(searchTerm)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Checkout button
+        document.getElementById('checkoutBtn').addEventListener('click', function() {
+            // Show loading spinner
+            document.getElementById('loading').style.display = 'flex';
+            
+            // Simulate API call
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+                showToast('success', 'Build added to cart!');
+                
+                // Redirect to checkout page
+                // window.location.href = 'checkout.html';
+            }, 1500);
+        });
+
+        // Toast notification
+        function showToast(type, message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.querySelector('.toast-message');
+            const toastIcon = document.querySelector('.toast-icon');
+            
+            // Set message
+            toastMessage.textContent = message;
+            
+            // Set type
+            toast.className = 'toast';
+            toast.classList.add('show');
+            
+            if (type === 'success') {
+                toast.classList.add('toast-success');
+                toastIcon.className = 'fas fa-check-circle toast-icon';
+            } else if (type === 'error') {
+                toast.classList.add('toast-error');
+                toastIcon.className = 'fas fa-exclamation-circle toast-icon';
+            } else if (type === 'warning') {
+                toast.classList.add('toast-warning');
+                toastIcon.className = 'fas fa-exclamation-triangle toast-icon';
+            }
+            
+            // Show toast
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Close toast on click
+        document.querySelector('.toast-close').addEventListener('click', function() {
+            document.getElementById('toast').classList.remove('show');
+        });
+
+        // Convert prices to INR and update cart functionality
+        const conversionRate = 82.5; // USD to INR conversion rate
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Select component and add to cart functionality - Single consolidated event listener
+        document.querySelectorAll('.select-component').forEach(button => {
+            button.addEventListener('click', function() {
+                const card = this.closest('.card');
+                const name = this.dataset.name;
+                const priceUSD = parseFloat(this.dataset.price);
+                const image = card.querySelector('.card-img').src;
+                
+                // Get image filename from full URL path
+                const imagePath = image.split('/').pop();
+                
+                const existingItem = cart.find(item => item.name === name);
+                if (existingItem) {
+                    existingItem.quantity++;
+                } else {
+                    cart.push({
+                        id: Date.now().toString(),
+                        name: name,
+                        priceUSD: priceUSD,
+                        quantity: 1,
+                        image: imagePath,
+                        type: 'component'
+                    });
+                }
+                
+                localStorage.setItem('cart', JSON.stringify(cart));
+                document.getElementById('cartCount').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+                showToast('success', `${name} added to cart!`);
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('cartCount').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            // Convert all prices from USD to INR
+            document.querySelectorAll('.card-price').forEach(priceElement => {
+                if (priceElement.textContent.includes('$')) {
+                    const priceUSD = parseFloat(priceElement.textContent.replace('$', ''));
+                    priceElement.textContent = `₹${(priceUSD * conversionRate).toFixed(2)}`;
+                }
+            });
+            
+            // Add digital-noise element to all component cards
+            document.querySelectorAll('.component-card').forEach(card => {
+                if (!card.querySelector('.digital-noise')) {
+                    const digitalNoise = document.createElement('div');
+                    digitalNoise.className = 'digital-noise';
+                    if (card.querySelector('.card-img')) {
+                        card.insertBefore(digitalNoise, card.querySelector('.card-img'));
+                    } else if (card.firstChild) {
+                        card.insertBefore(digitalNoise, card.firstChild);
+                    } else {
+                        card.appendChild(digitalNoise);
+                    }
+                }
+            });
+            
+            // Ensure mobile menu is initialized immediately
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            if (mobileMenuBtn) {
+                // Remove any existing event listeners
+                mobileMenuBtn.replaceWith(mobileMenuBtn.cloneNode(true));
+                
+                // Get the fresh button and add event listener
+                const newMobileMenuBtn = document.getElementById('mobileMenuBtn');
+                newMobileMenuBtn.addEventListener('click', function() {
+                    const navLinks = document.getElementById('navLinks');
+                    navLinks.classList.toggle('active');
+                    
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('fa-bars')) {
+                        icon.classList.replace('fa-bars', 'fa-times');
+                    } else {
+                        icon.classList.replace('fa-times', 'fa-bars');
+                    }
+                });
+            }
+            
+            // Also check for the function in animations.js
+            if (typeof initMobileMenu === 'function') {
+                initMobileMenu();
+            }
+        });
+    </script>
+    
+    <script src="animations.js"></script>
+</body>
+</html>
+

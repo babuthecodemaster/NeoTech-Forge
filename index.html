@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoTech Forge - Custom Gaming PCs & Components</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Smooth scrolling for the entire page */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Cyberpunk welcome overlay */
+        .welcome-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--primary);
+            font-family: var(--font-heading);
+            overflow: hidden;
+        }
+        
+        .glitch-logo {
+            font-size: 4rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            position: relative;
+            animation: glitch 2s infinite;
+            margin-bottom: 2rem;
+        }
+        
+        .glitch-logo::before,
+        .glitch-logo::after {
+            content: "NEOTECH FORGE";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch-logo::before {
+            color: #0ff;
+            z-index: -1;
+            animation: glitch-effect 2s infinite;
+        }
+        
+        .glitch-logo::after {
+            color: #f0f;
+            z-index: -2;
+            animation: glitch-effect 1.5s infinite reverse;
+        }
+        
+        @keyframes glitch-effect {
+            0% {
+                transform: translate(0);
+            }
+            20% {
+                transform: translate(-5px, 5px);
+            }
+            40% {
+                transform: translate(-5px, -5px);
+            }
+            60% {
+                transform: translate(5px, 5px);
+            }
+            80% {
+                transform: translate(5px, -5px);
+            }
+            100% {
+                transform: translate(0);
+            }
+        }
+        
+        .cyberpunk-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(127, 90, 240, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(127, 90, 240, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: -1;
+            transform: perspective(500px) rotateX(60deg);
+            animation: grid-anim 20s linear infinite;
+        }
+        
+        @keyframes grid-anim {
+            from {
+                background-position: 0 0;
+            }
+            to {
+                background-position: 0 500px;
+            }
+        }
+        
+        .loading-bar {
+            width: 300px;
+            height: 4px;
+            background-color: var(--surface-light);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+            margin-top: 2rem;
+        }
+        
+        .loading-progress {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 3s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        
+        .loading-text {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            letter-spacing: 2px;
+        }
+
+        /* Enhanced hero buttons */
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .hero-buttons .btn-primary,
+        .hero-buttons .btn-secondary {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            min-width: 220px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid transparent;
+        }
+        
+        .hero-buttons .btn-primary {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(127, 90, 240, 0.3);
+        }
+        
+        .hero-buttons .btn-secondary {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(44, 182, 125, 0.2);
+        }
+        
+        .hero-buttons .btn-primary:hover,
+        .hero-buttons .btn-secondary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(127, 90, 240, 0.5);
+        }
+        
+        .hero-buttons .btn-primary:hover span,
+        .hero-buttons .btn-secondary:hover span {
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+        
+        .hero-buttons .btn-primary i,
+        .hero-buttons .btn-secondary i {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .hero-buttons .btn-primary:hover i,
+        .hero-buttons .btn-secondary:hover i {
+            transform: scale(1.2);
+        }
+        
+        /* Page transition effect */
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: rgba(127, 90, 240, 0.8); /* Change hover background color */
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <!-- Cyberpunk Welcome Overlay -->
+    <div class="welcome-overlay" id="welcomeOverlay">
+        <div class="cyberpunk-grid"></div>
+        <div class="glitch-logo">NEOTECH FORGE</div>
+        <div class="loading-bar">
+            <div class="loading-progress" id="loadingProgress"></div>
+        </div>
+        <div class="loading-text" id="loadingText">INITIALIZING...</div>
+        <audio id="welcomeAudio" preload="auto">
+            <source src="" type="audio/mpeg">
+        </audio>
+    </div>
+    
+    <!-- Page Transition Effect -->
+    <div class="page-transition" id="pageTransition"></div>
+    
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-microchip"></i>
+                <span>NeoTech Forge</span>
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="nav-links" id="navLinks">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="customize.html" class="nav-link">Build PC</a>
+                <a href="prebuilt.html" class="nav-link">Pre-Built PCs</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="login.html" class="nav-link">Account</a>
+                <a href="cart.html" class="nav-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartCount" class="cart-count">0</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1 data-text="Build Your Dream Gaming Rig">Build Your Dream Gaming Rig</h1>
+            <p>Customize and build the perfect PC for gaming, work, or creativity with our advanced PC configurator.</p>
+            <div class="hero-buttons">
+                <a href="customize.html" class="btn-primary">
+                    <i class="fas fa-tools"></i> <span>Build Your PC</span>
+                </a>
+                <a href="prebuilt.html" class="btn-secondary">
+                    <i class="fas fa-desktop"></i> <span>Shop Pre-Built PCs</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Featured Pre-Built PCs</h2>
+                <a href="prebuilt.html" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="grid grid-3">
+                <div class="card">
+                    <div class="digital-noise"></div>
+                    <div class="card-badge">Best Seller</div>
+                    <img src="imgs/apex legend.jpg" alt="Apex Legend Gaming PC" class="card-img">
+                    <div class="card-content">
+                        <h3 class="card-title">Apex Legend Gaming PC</h3>
+                        <p class="card-price">₹123737.48</p>
+                        <div class="card-specs">
+                            <p><i class="fas fa-microchip"></i> AMD Ryzen 7 5800X</p>
+                            <p><i class="fas fa-tv"></i> NVIDIA RTX 3070</p>
+                            <p><i class="fas fa-memory"></i> 16GB DDR4 3200MHz</p>
+                            <p><i class="fas fa-hdd"></i> 1TB NVMe SSD</p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-primary">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                            <button class="btn-secondary">
+                                <i class="fas fa-eye"></i> Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="digital-noise"></div>
+                    <div class="card-badge">New</div>
+                    <img src="imgs/cpw.jpg" alt="Creator Pro Workstation" class="card-img">
+                    <div class="card-content">
+                        <h3 class="card-title">Creator Pro Workstation</h3>
+                        <p class="card-price">₹181949.98</p>
+                        <div class="card-specs">
+                            <p><i class="fas fa-microchip"></i> Intel Core i9-12900K</p>
+                            <p><i class="fas fa-tv"></i> NVIDIA RTX 3080</p>
+                            <p><i class="fas fa-memory"></i> 32GB DDR4 3600MHz</p>
+                            <p><i class="fas fa-hdd"></i> 2TB NVMe SSD</p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-primary">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                            <button class="btn-secondary">
+                                <i class="fas fa-eye"></i> Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="digital-noise"></div>
+                    <div class="card-badge">Value</div>
+                    <img src="imgs/sgpc.jpg" alt="Starter Gaming PC" class="card-img">
+                    <div class="card-content">
+                        <h3 class="card-title">Starter Gaming PC</h3>
+                        <p class="card-price">₹74174.98</p>
+                        <div class="card-specs">
+                            <p><i class="fas fa-microchip"></i> AMD Ryzen 5 5600X</p>
+                            <p><i class="fas fa-tv"></i> NVIDIA RTX 3060</p>
+                            <p><i class="fas fa-memory"></i> 16GB DDR4 3200MHz</p>
+                            <p><i class="fas fa-hdd"></i> 500GB NVMe SSD</p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-primary">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                            <button class="btn-secondary">
+                                <i class="fas fa-eye"></i> Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section bg-surface">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose NeoTech Forge?</h2>
+            </div>
+            <div class="grid grid-3">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3>Custom PC Builder</h3>
+                    <p>Build your dream PC with our easy-to-use PC builder tool. Select from hundreds of components and see real-time compatibility checks.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <h3>Fast & Free Shipping</h3>
+                    <p>Get your custom PC or components delivered to your doorstep with our fast and free shipping on all orders over $99.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>Expert Support</h3>
+                    <p>Our team of PC building experts is available 24/7 to help you with any questions or issues you may have.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Latest Components</h2>
+                <a href="components.html" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="grid grid-4">
+                <div class="card">
+                    <div class="digital-noise"></div>
+                    <img src="imgs/amd ryzen.png" alt="AMD Ryzen 7000" class="card-img">
+                    <div class="card-content">
+                        <h3 class="card-title">AMD Ryzen 9 7950X</h3>
+                        <p class="card-price">₹57674.99</p>
+                        <div class="card-specs">
+                            <p>16 Cores, 32 Threads</p>
+                            <p>4.5GHz Base, 5.7GHz Boost</p>
+                        </div>
+                        <button class="btn-primary">
+                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="digital-noise"></div>
+                    <img src="imgs/4080.jpg" alt="NVIDIA RTX 4080" class="card-img">
+                    <div class="card-content">
+                        <h3 class="card-title">NVIDIA RTX 4080</h3>
+                        <p class="card-price">₹98849.99</p>
+                        <div class="card-specs">
+                            <p>16GB GDDR6X</p>
+                            <p>DLSS 3.0, Ray Tracing</p>
+                        </div>
+                        <button class="btn-primary">
+                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="digital-noise"></div>
+                    <img src="imgs/samsung pro.jpg" alt="Samsung 990 Pro" class="card-img">
+                    <div class="card-content">
+                        <h3 class="card-title">Samsung 990 Pro 2TB</h3>
+                        <p class="card-price">₹20574.99</p>
+                        <div class="card-specs">
+                            <p>PCIe 4.0 NVMe SSD</p>
+                            <p>7,450 MB/s Read, 6,900 MB/s Write</p>
+                        </div>
+                        <button class="btn-primary">
+                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="digital-noise"></div>
+                    <img src="imgs/tridentz 5.jpg" alt="G.Skill Trident Z5" class="card-img">
+                    <div class="card-content">
+                        <h3 class="card-title">G.Skill Trident Z5 RGB 32GB</h3>
+                        <p class="card-price">₹15674.99</p>
+                        <div class="card-specs">
+                            <p>DDR5-6000</p>
+                            <p>CL36 Timing</p>
+                        </div>
+                        <button class="btn-primary">
+                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Build Your Dream PC?</h2>
+                <p>Start customizing your perfect PC today with our easy-to-use PC builder tool.</p>
+                <a href="customize.html" class="btn-primary">
+                    <i class="fas fa-tools"></i> Start Building
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3 class="footer-heading">NeoTech Forge</h3>
+                    <p>Your one-stop shop for custom PC builds and pre-built gaming computers.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-heading">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="index.html">Home</a></li>
+                        <li class="footer-link"><a href="customize.html">Build PC</a></li>
+                        <li class="footer-link"><a href="prebuilt.html">Pre-Built PCs</a></li>
+                        <li class="footer-link"><a href="about.html">About Us</a></li>
+                        <li class="footer-link"><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-heading">Support</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#">FAQs</a></li>
+                        <li class="footer-link"><a href="#">Shipping Policy</a></li>
+                        <li class="footer-link"><a href="#">Return Policy</a></li>
+                        <li class="footer-link"><a href="#">Warranty</a></li>
+                        <li class="footer-link"><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-heading">Contact Us</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link">
+                            <a href="https://www.google.com/maps?q=Pillai+College+of+Engineering+and+Technology,+Navi+Mumbai" target="_blank">
+                                <i class="fas fa-map-marker-alt"></i> Pillai College of Engineering and Technology, Navi Mumbai
+                            </a>
+                        </li>
+                        <li class="footer-link"><i class="fas fa-phone"></i> +91 9028611069</li>
+                        <li class="footer-link"><i class="fas fa-envelope"></i> support@neotechforge.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 NeoTech Forge. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle toast-icon"></i>
+        <div class="toast-content">
+            <p class="toast-message">Item added to cart!</p>
+        </div>
+        <button class="toast-close"><i class="fas fa-times"></i></button>
+    </div>
+
+    <script src="animations.js"></script>
+    <script>
+        const conversionRate = 82.5; // USD to INR conversion rate
+        let cart = JSON.parse(localStorage.getItem('cart')) || []; // Retrieve cart from localStorage
+
+        // Add to cart functionality
+        document.querySelectorAll('.btn-primary').forEach(button => {
+            if (button.textContent.includes('Add to Cart')) {
+                button.addEventListener('click', function () {
+                    const card = this.closest('.card');
+                    const title = card.querySelector('.card-title').textContent;
+                    const priceUSD = parseFloat(card.querySelector('.card-price').textContent.replace('₹', '')) / conversionRate;
+
+                    const existingItem = cart.find(item => item.title === title);
+                    if (existingItem) {
+                        existingItem.quantity++;
+                    } else {
+                        cart.push({ 
+                            id: Date.now().toString(),
+                            name: title, 
+                            priceUSD, 
+                            quantity: 1,
+                            image: card.querySelector('.card-img').src
+                        });
+                    }
+
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    updateCartCount();
+                    showToast('success', `${title} added to cart!`);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+

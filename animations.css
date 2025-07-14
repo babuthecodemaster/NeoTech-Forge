@@ -1,0 +1,1198 @@
+/* Cyberpunk Animations CSS */
+
+/* Smooth scrolling for the entire page */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Cyberpunk welcome overlay */
+.welcome-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--primary);
+    font-family: var(--font-heading);
+    overflow: hidden;
+}
+
+.glitch-logo {
+    font-size: 4rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    position: relative;
+    animation: glitch 1s infinite;
+    margin-bottom: 2rem;
+}
+
+.glitch-logo::before,
+.glitch-logo::after {
+    content: "NEOTECH FORGE";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.glitch-logo::before {
+    color: #0ff;
+    z-index: -1;
+    animation: glitch-effect 1s infinite;
+}
+
+.glitch-logo::after {
+    color: #f0f;
+    z-index: -2;
+    animation: glitch-effect 0.75s infinite reverse;
+}
+
+@keyframes glitch-effect {
+    0% {
+        transform: translate(0);
+    }
+    20% {
+        transform: translate(-5px, 5px);
+    }
+    40% {
+        transform: translate(-5px, -5px);
+    }
+    60% {
+        transform: translate(5px, 5px);
+    }
+    80% {
+        transform: translate(5px, -5px);
+    }
+    100% {
+        transform: translate(0);
+    }
+}
+
+.cyberpunk-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(rgba(127, 90, 240, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(127, 90, 240, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    z-index: -1;
+    transform: perspective(500px) rotateX(60deg);
+    animation: grid-anim 10s linear infinite;
+}
+
+@keyframes grid-anim {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: 0 500px;
+    }
+}
+
+.loading-bar {
+    width: 300px;
+    height: 4px;
+    background-color: var(--surface-light);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 2rem;
+}
+
+.loading-progress {
+    height: 100%;
+    background-color: var(--primary);
+    width: 0%;
+    transition: width 1s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.loading-text {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    letter-spacing: 2px;
+}
+
+/* Page transition effect */
+.page-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+/* Enhanced hero buttons */
+.hero-buttons {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.hero-buttons .btn-primary,
+.hero-buttons .btn-secondary {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    min-width: 220px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid transparent;
+    clip-path: polygon(0 10%, 10% 0, 90% 0, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0 90%);
+}
+
+.hero-buttons .btn-primary {
+    border-color: var(--primary);
+    box-shadow: 0 0 15px rgba(127, 90, 240, 0.3);
+    background: linear-gradient(45deg, var(--primary), #4527a0);
+}
+
+.hero-buttons .btn-secondary {
+    border-color: var(--secondary);
+    box-shadow: 0 0 15px rgba(44, 182, 125, 0.2);
+    background: linear-gradient(45deg, var(--surface), var(--surface-light));
+    border: 2px solid var(--secondary);
+}
+
+.hero-buttons .btn-primary::before,
+.hero-buttons .btn-secondary::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #f0f, #0ff);
+    z-index: -2;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.hero-buttons .btn-primary:hover,
+.hero-buttons .btn-secondary:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(127, 90, 240, 0.5);
+}
+
+.hero-buttons .btn-primary:hover::before,
+.hero-buttons .btn-secondary:hover::before {
+    opacity: 0.5;
+    animation: borderGlow 1s infinite alternate;
+}
+
+@keyframes borderGlow {
+    from { opacity: 0.3; }
+    to { opacity: 0.7; }
+}
+
+.hero-buttons .btn-primary:hover span,
+.hero-buttons .btn-secondary:hover span {
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
+    animation: textPulse 1s infinite alternate;
+    color: #ffffff;
+}
+
+@keyframes textPulse {
+    from { text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4); }
+    to { text-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.6); }
+}
+
+.hero-buttons .btn-primary i,
+.hero-buttons .btn-secondary i {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.hero-buttons .btn-primary:hover i,
+.hero-buttons .btn-secondary:hover i {
+    transform: scale(1.2);
+    color: #00f0ff;
+    animation: iconGlow 1s infinite alternate;
+}
+
+@keyframes iconGlow {
+    from { color: #00f0ff; text-shadow: 0 0 5px #00f0ff; }
+    to { color: #f700ff; text-shadow: 0 0 10px #f700ff; }
+}
+
+/* Enhanced hero section and other cyberpunk effects */
+.hero {
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--primary), transparent);
+    animation: horizontalScan 3s infinite;
+    z-index: 1;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent, var(--secondary), transparent);
+    animation: verticalScan 5s infinite;
+    z-index: 1;
+}
+
+@keyframes horizontalScan {
+    0% { top: 0; opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+}
+
+@keyframes verticalScan {
+    0% { left: 0; opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { left: 100%; opacity: 0; }
+}
+
+/* Glitch effect for headings */
+.hero h1 {
+    position: relative;
+    animation: glitchText 5s infinite;
+}
+
+.hero h1::before,
+.hero h1::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+}
+
+.hero h1::before {
+    color: #0ff;
+    z-index: -1;
+    animation: glitchText1 5s infinite;
+}
+
+.hero h1::after {
+    color: #f0f;
+    z-index: -2;
+    animation: glitchText2 5s infinite;
+}
+
+@keyframes glitchText {
+    0%, 40%, 44%, 58%, 61%, 65%, 69%, 73%, 100% {
+        transform: skewX(0deg);
+    }
+    41% {
+        transform: skewX(10deg);
+    }
+    42% {
+        transform: skewX(-10deg);
+    }
+    59% {
+        transform: skewX(40deg) skewY(10deg);
+    }
+    60% {
+        transform: skewX(-40deg) skewY(-10deg);
+    }
+    63% {
+        transform: skewX(10deg) skewY(-5deg);
+    }
+    70% {
+        transform: skewX(-50deg) skewY(-20deg);
+    }
+    71% {
+        transform: skewX(10deg) skewY(-10deg);
+    }
+}
+
+@keyframes glitchText1 {
+    0%, 40%, 44%, 58%, 61%, 65%, 69%, 73%, 100% {
+        transform: translate(0);
+    }
+    41% {
+        transform: translate(-2px, 2px);
+    }
+    42% {
+        transform: translate(2px, -2px);
+    }
+    59% {
+        transform: translate(4px, 1px);
+    }
+    60% {
+        transform: translate(-4px, -1px);
+    }
+    63% {
+        transform: translate(1px, -3px);
+    }
+    70% {
+        transform: translate(-3px, 2px);
+    }
+    71% {
+        transform: translate(3px, -2px);
+    }
+}
+
+@keyframes glitchText2 {
+    0%, 40%, 44%, 58%, 61%, 65%, 69%, 73%, 100% {
+        transform: translate(0);
+    }
+    41% {
+        transform: translate(2px, -2px);
+    }
+    42% {
+        transform: translate(-2px, 2px);
+    }
+    59% {
+        transform: translate(-4px, -1px);
+    }
+    60% {
+        transform: translate(4px, 1px);
+    }
+    63% {
+        transform: translate(-1px, 3px);
+    }
+    70% {
+        transform: translate(3px, -2px);
+    }
+    71% {
+        transform: translate(-3px, 2px);
+    }
+}
+
+/* Button glow effect */
+.btn-primary {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.7s ease;
+    z-index: -1;
+}
+
+.btn-primary:hover::after {
+    left: 100%;
+}
+
+/* Empty cart animation */
+.empty-cart i {
+    animation: float 1s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* Enhanced auth form */
+.auth-container {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(127, 90, 240, 0.2);
+}
+
+.auth-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    z-index: 1;
+}
+
+.auth-tab.active::after {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(127, 90, 240, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(127, 90, 240, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(127, 90, 240, 0);
+    }
+}
+
+/* Enhanced contact form */
+.contact-form {
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.contact-form::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--primary), var(--secondary));
+    border-radius: 3px;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+    animation: glow 1s infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 5px rgba(127, 90, 240, 0.3);
+    }
+    to {
+        box-shadow: 0 0 10px rgba(127, 90, 240, 0.6);
+    }
+}
+
+/* Product Item Cyberpunk Animations */
+.card {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                box-shadow 0.4s ease;
+    z-index: 1;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(247, 0, 255, 0.15));
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.card::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, 
+                transparent 0%, 
+                rgba(0, 240, 255, 0.05) 50%, 
+                transparent 100%);
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    animation: scanLine 2s linear infinite;
+}
+
+.card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 10px 25px rgba(0, 240, 255, 0.2), 
+                0 5px 15px rgba(247, 0, 255, 0.1);
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+.card:hover::after {
+    opacity: 1;
+}
+
+.card-img {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s ease;
+}
+
+.card-img::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, 
+                transparent, 
+                rgba(255, 255, 255, 0.3), 
+                transparent);
+    transform: skewX(-25deg);
+    z-index: 1;
+    transition: left 0s;
+}
+
+.card:hover .card-img::before {
+    animation: shine 1s infinite;
+}
+
+@keyframes shine {
+    0% {
+        left: -100%;
+    }
+    20% {
+        left: 100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+.card-title {
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.card:hover .card-title {
+    color: #00f0ff;
+    text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+    animation: titleGlitch 3s infinite;
+}
+
+@keyframes titleGlitch {
+    0%, 90%, 94%, 98%, 100% {
+        transform: skew(0deg);
+        text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+        color: #00f0ff;
+    }
+    91% {
+        transform: skew(10deg);
+        text-shadow: 2px 0 8px rgba(247, 0, 255, 0.6);
+        color: #f700ff;
+    }
+    95% {
+        transform: skew(-10deg);
+        text-shadow: -2px 0 8px rgba(0, 240, 255, 0.6);
+        color: #00f0ff;
+    }
+    99% {
+        transform: skew(5deg);
+        text-shadow: 1px 0 8px rgba(247, 0, 255, 0.6);
+        color: #f700ff;
+    }
+}
+
+.card-price {
+    position: relative;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.card:hover .card-price {
+    transform: scale(1.1);
+    color: #f700ff;
+    text-shadow: 0 0 8px rgba(247, 0, 255, 0.5);
+}
+
+.card-specs {
+    position: relative;
+    transition: opacity 0.3s ease;
+}
+
+.card:hover .card-specs {
+    opacity: 0.8;
+}
+
+.card-actions {
+    position: relative;
+    z-index: 2;
+    opacity: 0.9;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.card:hover .card-actions {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.card .btn-primary {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.card:hover .btn-primary {
+    background: linear-gradient(45deg, #7f5af0, #4527a0);
+    box-shadow: 0 0 15px rgba(127, 90, 240, 0.5);
+    animation: buttonPulse 2s infinite alternate;
+}
+
+@keyframes buttonPulse {
+    from { box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
+    to { box-shadow: 0 0 20px rgba(247, 0, 255, 0.7); }
+}
+
+@keyframes scanLine {
+    0% {
+        top: -100%;
+    }
+    100% {
+        top: 100%;
+    }
+}
+
+/* Digital noise effect for item cards */
+.digital-noise {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E");
+    opacity: 0;
+    z-index: 1;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    transition: opacity 0.3s ease;
+}
+
+.card:hover .digital-noise {
+    opacity: 0.1;
+    animation: noiseAnimation 0.5s steps(2) infinite;
+}
+
+@keyframes noiseAnimation {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-2px, 1px); }
+    50% { transform: translate(1px, -2px); }
+    75% { transform: translate(2px, 1px); }
+    100% { transform: translate(-1px, -1px); }
+}
+
+/* Item count animation for cart */
+.cart-count {
+    animation: cartCountPulse 2s infinite alternate;
+}
+
+@keyframes cartCountPulse {
+    from { 
+        background-color: var(--primary); 
+        box-shadow: 0 0 5px var(--primary);
+    }
+    to { 
+        background-color: #f700ff; 
+        box-shadow: 0 0 10px #f700ff;
+    }
+}
+
+/* Global cyberpunk animations for all pages */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        transparent 0px,
+        rgba(0, 240, 255, 0.01) 1px,
+        transparent 2px
+    );
+    pointer-events: none;
+    z-index: 9995;
+    opacity: 0.3;
+    animation: scanlines 5s linear infinite;
+}
+
+@keyframes scanlines {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100px; }
+}
+
+/* Value cards animations (About page) */
+.value-card {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    z-index: 1;
+}
+
+.value-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00f0ff, transparent);
+    transform: translateX(-100%);
+    z-index: 1;
+}
+
+.value-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 240, 255, 0.15);
+}
+
+.value-card:hover::before {
+    animation: slidingGlow 2s infinite;
+}
+
+.value-icon {
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.value-card:hover .value-icon {
+    transform: scale(1.1);
+    animation: iconPulse 1.5s infinite alternate;
+}
+
+.value-card:hover .value-icon i {
+    animation: iconColor 2s infinite alternate;
+}
+
+@keyframes iconPulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.2); }
+}
+
+@keyframes iconColor {
+    0% { color: var(--primary); }
+    50% { color: #00f0ff; }
+    100% { color: #f700ff; }
+}
+
+@keyframes slidingGlow {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Team member animations (About page) */
+.team-member {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.team-member::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, 
+                rgba(0, 240, 255, 0.1), 
+                rgba(247, 0, 255, 0.1));
+    opacity: 0;
+    z-index: 1;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.team-member:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 10px 25px rgba(127, 90, 240, 0.2);
+}
+
+.team-member:hover::after {
+    opacity: 1;
+}
+
+.team-image {
+    position: relative;
+    transition: transform 0.5s ease;
+    overflow: hidden;
+}
+
+.team-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, 
+                transparent, 
+                rgba(255, 255, 255, 0.3), 
+                transparent);
+    transform: skewX(-25deg);
+    z-index: 2;
+}
+
+.team-member:hover .team-image::before {
+    animation: imageShine 1.5s infinite;
+}
+
+.team-member:hover .team-image {
+    transform: scale(1.03);
+}
+
+@keyframes imageShine {
+    0% { left: -100%; }
+    30% { left: 100%; }
+    100% { left: 100%; }
+}
+
+.team-member:hover h3 {
+    color: #00f0ff;
+    text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+}
+
+.team-role {
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.team-member:hover .team-role {
+    color: #f700ff;
+    text-shadow: 0 0 5px rgba(247, 0, 255, 0.5);
+}
+
+/* Facility image animations (About page) */
+.facility-image {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.facility-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, 
+                rgba(0, 240, 255, 0.15), 
+                rgba(247, 0, 255, 0.15));
+    opacity: 0;
+    z-index: 1;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.facility-image::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, 
+                transparent 0%, 
+                rgba(0, 240, 255, 0.05) 50%, 
+                transparent 100%);
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.facility-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0, 240, 255, 0.2);
+}
+
+.facility-image:hover::before {
+    opacity: 1;
+}
+
+.facility-image:hover::after {
+    opacity: 1;
+    animation: facilityScan 1.5s linear infinite;
+}
+
+@keyframes facilityScan {
+    0% { top: -100%; }
+    100% { top: 100%; }
+}
+
+/* Cart item animations (Cart page) */
+.cart-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.cart-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, 
+                rgba(0, 240, 255, 0.05), 
+                rgba(247, 0, 255, 0.05));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.cart-item:hover::before {
+    opacity: 1;
+}
+
+.cart-item:hover h3 {
+    color: #00f0ff;
+    text-shadow: 0 0 5px rgba(0, 240, 255, 0.3);
+}
+
+.cart-item-total {
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.cart-item:hover .cart-item-total {
+    color: #f700ff;
+    text-shadow: 0 0 5px rgba(247, 0, 255, 0.5);
+    transform: scale(1.1);
+}
+
+.remove-item {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.remove-item:hover {
+    color: #f700ff;
+    transform: scale(1.1);
+    text-shadow: 0 0 8px rgba(247, 0, 255, 0.7);
+}
+
+/* Contact form animations (Contact page) */
+.input-group {
+    position: relative;
+    overflow: hidden;
+}
+
+.input-group input,
+.input-group textarea {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group:hover .input-icon {
+    animation: iconPulse 1.5s infinite alternate;
+    color: #00f0ff;
+}
+
+.contact-info .footer-link:hover i {
+    animation: iconColor 2s infinite alternate;
+    transform: scale(1.1);
+}
+
+.map-container {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.map-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 2px solid transparent;
+    background: linear-gradient(45deg, #00f0ff, #f700ff) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    z-index: 1;
+    transition: opacity 0.3s ease;
+}
+
+.map-container:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 20px rgba(127, 90, 240, 0.2);
+}
+
+.map-container:hover::before {
+    opacity: 1;
+    animation: borderRotate 3s linear infinite;
+}
+
+@keyframes borderRotate {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 130% 0%; }
+}
+
+/* Login/Register form animations (Login page) */
+.auth-tab {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.auth-tab::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to right, var(--primary), #00f0ff, var(--primary));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    z-index: 1;
+}
+
+.auth-tab:hover::before {
+    transform: scaleX(1);
+}
+
+.auth-tab.active::before {
+    transform: scaleX(1);
+    animation: tabGlow 2s infinite alternate;
+}
+
+@keyframes tabGlow {
+    from { opacity: 0.6; box-shadow: 0 0 5px rgba(0, 240, 255, 0.5); }
+    to { opacity: 1; box-shadow: 0 0 10px rgba(0, 240, 255, 0.8); }
+}
+
+.password-toggle {
+    transition: all 0.3s ease;
+}
+
+.password-toggle:hover {
+    color: #00f0ff;
+    transform: scale(1.1);
+}
+
+.password-toggle:hover i {
+    animation: iconColor 2s infinite alternate;
+}
+
+/* Global cyberpunk effect for footer */
+.footer-heading {
+    position: relative;
+    display: inline-block;
+}
+
+.footer-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50%;
+    height: 1px;
+    background: linear-gradient(to right, #00f0ff, transparent);
+}
+
+.footer-link a:hover {
+    color: #00f0ff;
+    text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.social-link {
+    position: relative;
+    overflow: hidden;
+}
+
+.social-link::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(0, 240, 255, 0.7) 0%, rgba(0, 240, 255, 0) 70%);
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s ease;
+}
+
+.social-link:hover::before {
+    opacity: 0.3;
+    transform: scale(1.5);
+}
+
+.social-link:hover i {
+    animation: iconColor 2s infinite alternate;
+    transform: scale(1.2);
+}
+
+/* Glitch particle effect for cursor */
+.glitch-particle {
+    position: fixed;
+    pointer-events: none;
+    border-radius: 50%;
+    z-index: 10000;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Random glitch effect for elements */
+.random-glitch {
+    animation: randomGlitch 0.2s forwards;
+}
+
+@keyframes randomGlitch {
+    0%, 100% { 
+        transform: translate(0);
+        opacity: 1;
+    }
+    20% { 
+        transform: translate(-3px, 3px); 
+        opacity: 0.9;
+        filter: hue-rotate(90deg);
+    }
+    40% { 
+        transform: translate(3px, -3px);
+        opacity: 0.9; 
+        filter: hue-rotate(180deg);
+    }
+    60% { 
+        transform: translate(5px, 0);
+        opacity: 0.9; 
+        filter: hue-rotate(270deg);
+    }
+    80% { 
+        transform: translate(-5px, 0);
+        opacity: 0.9; 
+        filter: hue-rotate(360deg);
+    }
+} 

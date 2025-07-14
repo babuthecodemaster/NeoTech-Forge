@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | NeoTech Forge</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Checkout Container */
+        .checkout-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .checkout-summary {
+            flex: 1 1 45%;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+        }
+        
+        .checkout-summary h2 {
+            margin-bottom: 1rem;
+            color: #0a9cf1;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .summary-total {
+            font-weight: bold;
+            font-size: 1.2rem;
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            background: #0a9cf1;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 1rem;
+        }
+        
+        .btn-primary:hover {
+            background: #0880c7;
+        }
+        
+        /* Payment Modal */
+        .payment-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .payment-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+        }
+        
+        .payment-method {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .payment-method:hover {
+            border-color: #0a9cf1;
+            background: #f5f9ff;
+        }
+        
+        .payment-method.selected {
+            border-color: #0a9cf1;
+            background: #f0f7ff;
+        }
+        
+        .payment-icon {
+            margin-right: 1rem;
+            font-size: 1.5rem;
+            color: #555;
+        }
+        
+        #confirmPayment {
+            margin-top: 1.5rem;
+            width: 100%;
+            display: none;
+        }
+        
+        /* Card Details Page (hidden by default) */
+        #cardDetailsPage {
+            display: none;
+        }
+        
+        .checkout-form {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        /* Success Modal */
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .success-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .success-icon {
+            font-size: 4rem;
+            color: #4CAF50;
+            margin-bottom: 1rem;
+        }
+        
+        .success-message {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .checkout-container {
+                flex-direction: column;
+            }
+            
+            .checkout-summary, .checkout-form {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- Your header/navbar -->
+    </header>
+
+    <main class="container">
+        <h1>Checkout</h1>
+        <div class="checkout-container">
+            <!-- Order Summary -->
+            <div class="checkout-summary">
+                <h2>Order Summary</h2>
+                <div id="orderSummary">
+                    <!-- Items will be added by JavaScript -->
+                </div>
+                <div class="summary-item summary-total">
+                    <span>Total:</span>
+                    <span id="totalPrice">₹0.00</span>
+                </div>
+                <button type="button" id="payButton" class="btn-primary">
+                    Proceed to Payment
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="payment-modal">
+        <div class="payment-content">
+            <h2>Select Payment Method</h2>
+            
+            <div class="payment-method" data-method="card">
+                <i class="fas fa-credit-card payment-icon"></i>
+                <div>
+                    <h4>Credit/Debit Card</h4>
+                    <p>Pay using Visa, Mastercard, or other cards</p>
+                </div>
+            </div>
+                        
+            <div class="payment-method" data-method="cod">
+                <i class="fas fa-truck payment-icon"></i>
+                <div>
+                    <h4>Cash on Delivery</h4>
+                    <p>Pay when you receive your order</p>
+                </div>
+            </div>
+            
+            <button id="confirmPayment" class="btn-primary">
+                Confirm Payment
+            </button>
+        </div>
+    </div>
+
+    <!-- Card Details Page (hidden by default) -->
+    <div id="cardDetailsPage" class="container" style="display: none;">
+        <h1>Card Payment</h1>
+        <div class="checkout-container">
+            <div class="checkout-summary">
+                <h2>Order Summary</h2>
+                <div id="cardOrderSummary"></div>
+                <div class="summary-item summary-total">
+                    <span>Total:</span>
+                    <span id="cardTotalPrice">₹0.00</span>
+                </div>
+            </div>
+
+            <div class="checkout-form">
+                <h2>Card Details</h2>
+                <div class="input-group">
+                    <label for="cardNumber">Card Number</label>
+                    <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" required>
+                </div>
+                <div class="input-group">
+                    <label for="cardName">Name on Card</label>
+                    <input type="text" id="cardName" name="cardName" required>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <div class="input-group" style="flex: 1;">
+                        <label for="expiryDate">Expiry Date</label>
+                        <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" required>
+                    </div>
+                    <div class="input-group" style="flex: 1;">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" name="cvv" placeholder="123" required>
+                    </div>
+                </div>
+                <button type="button" id="submitCardPayment" class="btn-primary">
+                    Pay ₹<span id="cardPayAmount">0.00</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="success-modal">
+        <div class="success-content">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="success-message">Order Placed Successfully!</h2>
+            <p>Your payment has been processed.</p>
+            <p>You will be redirected shortly...</p>
+        </div>
+    </div>
+
+    <footer>
+        <!-- Your footer -->
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            // Sample cart data - in a real app you would get this from localStorage or server
+            const cart = [
+                { name: "Gaming PC", priceUSD: 1000, quantity: 1 },
+                { name: "Monitor", priceUSD: 300, quantity: 2 }
+            ];
+            
+            const orderSummary = document.getElementById('orderSummary');
+            const cardOrderSummary = document.getElementById('cardOrderSummary');
+            const totalPriceElement = document.getElementById('totalPrice');
+            const cardTotalPrice = document.getElementById('cardTotalPrice');
+            const cardPayAmount = document.getElementById('cardPayAmount');
+            const payButton = document.getElementById('payButton');
+            const paymentModal = document.getElementById('paymentModal');
+            const confirmPayment = document.getElementById('confirmPayment');
+            const paymentMethods = document.querySelectorAll('.payment-method');
+            const cardDetailsPage = document.getElementById('cardDetailsPage');
+            const submitCardPayment = document.getElementById('submitCardPayment');
+            const successModal = document.getElementById('successModal');
+            
+            let selectedMethod = null;
+            let totalPrice = 0;
+
+            // Display cart items and calculate total
+            cart.forEach(item => {
+                const itemRow = document.createElement('div');
+                itemRow.className = 'summary-item';
+                const priceINR = item.priceUSD * 82.5 * item.quantity;
+                itemRow.innerHTML = `<span>${item.name} (x${item.quantity})</span><span>₹${priceINR.toFixed(2)}</span>`;
+                orderSummary.appendChild(itemRow);
+                
+                // Also add to card order summary
+                const cardItemRow = itemRow.cloneNode(true);
+                cardOrderSummary.appendChild(cardItemRow);
+                
+                totalPrice += priceINR;
+            });
+
+            totalPriceElement.textContent = `₹${totalPrice.toFixed(2)}`;
+            cardTotalPrice.textContent = `₹${totalPrice.toFixed(2)}`;
+            cardPayAmount.textContent = totalPrice.toFixed(2);
+
+            // Show payment methods when Pay button is clicked
+            payButton.addEventListener('click', function() {
+                paymentModal.style.display = 'flex';
+            });
+
+            // Handle payment method selection
+            paymentMethods.forEach(method => {
+                method.addEventListener('click', function() {
+                    // Remove previous selection
+                    paymentMethods.forEach(m => {
+                        m.classList.remove('selected');
+                    });
+                    
+                    // Select this method
+                    this.classList.add('selected');
+                    selectedMethod = this.getAttribute('data-method');
+                    
+                    // For card payment, show card details page immediately
+                    if (selectedMethod === 'card') {
+                        paymentModal.style.display = 'none';
+                        cardDetailsPage.style.display = 'block';
+                        document.querySelector('main').style.display = 'none';
+                    } else {
+                        confirmPayment.style.display = 'block';
+                    }
+                });
+            });
+
+            // Handle payment confirmation for non-card methods
+            confirmPayment.addEventListener('click', function() {
+                if (!selectedMethod) {
+                    alert('Please select a payment method');
+                    return;
+                }
+                
+                paymentModal.style.display = 'none';
+                
+                if (selectedMethod === 'cod') {
+                    // Handle Cash on Delivery
+                    if (confirm('Place order with Cash on Delivery?')) {
+                        showSuccessAndRedirect();
+                    }
+                } else {
+                    // Handle net banking payment (simulated)
+                    showSuccessAndRedirect();
+                }
+            });
+
+            // Handle card payment submission
+            submitCardPayment.addEventListener('click', function() {
+                // Validate card form
+                if (!validateCardForm()) {
+                    return;
+                }
+                
+                showSuccessAndRedirect();
+            });
+
+            function validateCardForm() {
+                const cardNumber = document.getElementById('cardNumber').value;
+                const cardName = document.getElementById('cardName').value;
+                const expiryDate = document.getElementById('expiryDate').value;
+                const cvv = document.getElementById('cvv').value;
+                
+                if (!cardNumber || !cardName || !expiryDate || !cvv) {
+                    alert('Please fill all card details');
+                    return false;
+                }
+                
+                // Simple validation for demo purposes
+                if (!/^\d{16}$/.test(cardNumber.replace(/\s/g, ''))) {
+                    alert('Please enter a valid 16-digit card number');
+                    return false;
+                }
+                
+                if (!/^\d{3,4}$/.test(cvv)) {
+                    alert('Please enter a valid CVV (3 or 4 digits)');
+                    return false;
+                }
+                
+                return true;
+            }
+
+            // Close modal when clicking outside
+            paymentModal.addEventListener('click', function(e) {
+                if (e.target === paymentModal) {
+                    paymentModal.style.display = 'none';
+                }
+            });
+
+            function showSuccessAndRedirect() {
+                // In a real app, you would send this data to your server
+                const orderData = {
+                    items: cart,
+                    total: totalPrice,
+                    paymentMethod: selectedMethod
+                };
+                
+                if (selectedMethod === 'card') {
+                    orderData.cardDetails = {
+                        last4: document.getElementById('cardNumber').value.slice(-4),
+                        cardName: document.getElementById('cardName').value
+                    };
+                }
+                
+                console.log('Order completed:', orderData);
+                
+                // Show success modal
+                successModal.style.display = 'flex';
+                
+                // Hide other pages
+                document.querySelector('main').style.display = 'none';
+                cardDetailsPage.style.display = 'none';
+                
+                // Redirect after 3 seconds
+                setTimeout(function() {
+                    window.location.href = 'index.html';// Redirect to previous page
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

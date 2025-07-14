@@ -1,0 +1,624 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.html?error=Please log in to access the cart');
+    exit();
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart | NeoTech Forge</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Smooth scrolling for the entire page */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Page transition effect */
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        
+        /* Enhanced cart items */
+        .cart-item {
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .cart-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(127, 90, 240, 0.15);
+            background-color: var(--surface-light);
+        }
+        
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.7s ease;
+            z-index: -1;
+        }
+        
+        .btn-primary:hover::after {
+            left: 100%;
+        }
+        
+        /* Empty cart animation */
+        .empty-cart i {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        .cart-container {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .cart-items {
+            flex: 2;
+            background-color: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+        }
+        .cart-item-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-right: 1rem;
+            border-radius: var(--radius-md);
+        }
+        .cart-item-details {
+            flex: 1;
+        }
+        .cart-item-price {
+            color: var(--primary);
+            font-weight: 700;
+        }
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0 1rem;
+        }
+        .quantity-btn {
+            background-color: var(--surface-light);
+            border: 1px solid var(--border);
+            padding: 0.5rem;
+            width: 2rem;
+            height: 2rem;
+        }
+        .quantity-input {
+            width: 4rem;
+            text-align: center;
+        }
+        .cart-item-total {
+            font-weight: 700;
+            margin: 0 1rem;
+        }
+        .remove-item {
+            background: none;
+            border: none;
+            color: var(--error);
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+        .cart-summary {
+            flex: 1;
+            background-color: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            min-width: 300px;
+        }
+        .summary-details {
+            margin-bottom: 1.5rem;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .summary-row.total {
+            font-weight: 700;
+            font-size: 1.25rem;
+            border-bottom: none;
+        }
+        .cart-note {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-top: 1rem;
+        }
+        .empty-cart {
+            text-align: center;
+            padding: 2rem;
+        }
+        .empty-cart i {
+            font-size: 3rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        @media (max-width: 768px) {
+            .cart-container {
+                flex-direction: column;
+            }
+            .cart-item {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+        }
+
+        /* Enhanced navigation styles */
+        .header-container {
+            position: relative;
+            z-index: 100;
+            background: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(127, 90, 240, 0.1);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            position: relative;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--primary);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 1rem;
+            min-width: 1.5rem;
+            text-align: center;
+        }
+
+        /* Mobile menu styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: rgba(18, 18, 18, 0.95);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                padding: 1.5rem;
+                gap: 1rem;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                transform: translateY(-100%);
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.3s ease;
+                z-index: 1000;
+            }
+            
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: auto;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                color: var(--text);
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+
+            .mobile-menu-btn:hover {
+                color: var(--primary);
+            }
+        }
+
+        .btn-primary:hover {
+            background-color: rgba(127, 90, 240, 0.8); /* Change hover background color */
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Transition Effect -->
+    <div class="page-transition" id="pageTransition"></div>
+    
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-microchip"></i>
+                <span>NeoTech Forge</span>
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="nav-links" id="navLinks">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="customize.html" class="nav-link">Build PC</a>
+                <a href="prebuilt.html" class="nav-link">Pre-Built PCs</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="login.html" class="nav-link">Account</a>
+                <a href="cart.html" class="nav-link active">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartCount" class="cart-count">0</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Your Shopping Cart</h1>
+            <p>Review your items and proceed to checkout</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="cart-container">
+                <div id="cartItems" class="cart-items">
+                    <!-- Cart items will be populated dynamically -->
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <p>Your cart is empty. Start shopping now!</p>
+                        <a href="index.html" class="btn-primary">
+                            <i class="fas fa-arrow-left"></i> Continue Shopping
+                        </a>
+                    </div>
+                </div>
+                <div class="cart-summary">
+                    <h2>Order Summary</h2>
+                    <div class="summary-details">
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="subtotal">₹0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Shipping</span>
+                            <span id="shipping">Free</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span id="total">₹0.00</span>
+                        </div>
+                    </div>
+                    <button id="checkoutBtn" class="btn-primary" disabled style="width: 100%;">
+                        <i class="fas fa-credit-card"></i> Proceed to Checkout
+                    </button>
+                    <p class="cart-note">Taxes and additional fees calculated at checkout</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Need More Components?</h2>
+                <p>Continue customizing your PC with our builder tool.</p>
+                <a href="customize.html" class="btn-primary">
+                    <i class="fas fa-tools"></i> Build Your PC
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3 class="footer-heading">NeoTech Forge</h3>
+                    <p>Your one-stop shop for custom PC builds and pre-built gaming computers.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-heading">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="index.html">Home</a></li>
+                        <li class="footer-link"><a href="customize.html">Build PC</a></li>
+                        <li class="footer-link"><a href="prebuilt.html">Pre-Built PCs</a></li>
+                        <li class="footer-link"><a href="about.html">About Us</a></li>
+                        <li class="footer-link"><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-heading">Support</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#">FAQs</a></li>
+                        <li class="footer-link"><a href="#">Shipping Policy</a></li>
+                        <li class="footer-link"><a href="#">Return Policy</a></li>
+                        <li class="footer-link"><a href="#">Warranty</a></li>
+                        <li class="footer-link"><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-heading">Contact Us</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link">
+                            <a href="https://www.google.com/maps?q=Pillai+College+of+Engineering+and+Technology,+Navi+Mumbai" target="_blank">
+                                <i class="fas fa-map-marker-alt"></i> Pillai College of Engineering and Technology, Navi Mumbai
+                            </a>
+                        </li>
+                        <li class="footer-link"><i class="fas fa-phone"></i> +91 9028611069</li>
+                        <li class="footer-link"><i class="fas fa-envelope"></i> support@neotechforge.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 NeoTech Forge. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle toast-icon"></i>
+        <div class="toast-content">
+            <p class="toast-message">Item updated in cart!</p>
+        </div>
+        <button class="toast-close"><i class="fas fa-times"></i></button>
+    </div>
+
+    <script src="animations.js"></script>
+    <script>
+        const conversionRate = 82.5; // USD to INR conversion rate
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        function updateCartCount() {
+            const cartCountElement = document.getElementById('cartCount');
+            if (cartCountElement) {
+                cartCountElement.textContent = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            }
+        }
+
+        function removeItem(e) {
+            e.preventDefault();
+            const button = e.target.closest('.remove-item');
+            if (!button) return;
+            
+            const id = button.dataset.id;
+            const itemToRemove = cart.find(item => item.id === id);
+            
+            if (itemToRemove) {
+                cart = cart.filter(item => item.id !== id);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCart();
+                updateCartCount();
+                showToast('success', `${itemToRemove.name} removed from cart!`);
+            }
+        }
+
+        function updateCart() {
+            const cartItems = document.getElementById('cartItems');
+            const subtotal = document.getElementById('subtotal');
+            const total = document.getElementById('total');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <p>Your cart is empty. Start shopping now!</p>
+                        <a href="index.html" class="btn-primary">
+                            <i class="fas fa-arrow-left"></i> Continue Shopping
+                        </a>
+                    </div>
+                `;
+                checkoutBtn.disabled = true;
+                subtotal.textContent = '₹0.00';
+                total.textContent = '₹0.00';
+            } else {
+                cartItems.innerHTML = '';
+                let subtotalValue = 0;
+
+                cart.forEach(item => {
+                    const priceInINR = item.priceUSD * conversionRate;
+                    const itemTotalINR = priceInINR * (item.quantity || 1);
+                    subtotalValue += itemTotalINR;
+
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'cart-item';
+                    cartItem.innerHTML = `
+                        <div class="digital-noise"></div>
+                        <img src="${item.image || 'placeholder.jpg'}" alt="${item.name}" class="cart-item-image">
+                        <div class="cart-item-details">
+                            <h3>${item.name}</h3>
+                            <p>₹${priceInINR.toFixed(2)} x ${item.quantity || 1}</p>
+                        </div>
+                        <div class="cart-item-total">₹${itemTotalINR.toFixed(2)}</div>
+                        <button class="remove-item" data-id="${item.id}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    cartItems.appendChild(cartItem);
+                });
+
+                subtotal.textContent = `₹${subtotalValue.toFixed(2)}`;
+                total.textContent = `₹${subtotalValue.toFixed(2)}`;
+                checkoutBtn.disabled = false;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const cartItems = document.getElementById('cartItems');
+            
+            // Add single event listener for remove buttons using event delegation
+            cartItems.addEventListener('click', function(e) {
+                if (e.target.closest('.remove-item')) {
+                    removeItem(e);
+                }
+            });
+
+            updateCart();
+            updateCartCount();
+
+            // Add event listener to the checkout button
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            checkoutBtn.addEventListener('click', function() {
+                if (cart.length > 0) {
+                    window.location.href = 'checkout.html';
+                } else {
+                    alert('Your cart is empty. Add items before proceeding to checkout.');
+                }
+            });
+        });
+
+        // Rest of your existing code for mobile menu, toast, etc...
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.replace('fa-bars', 'fa-times');
+            } else {
+                icon.classList.replace('fa-times', 'fa-bars');
+            }
+        });
+        
+        // Toast notification
+        function showToast(type, message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.querySelector('.toast-message');
+            const toastIcon = document.querySelector('.toast-icon');
+
+            toastMessage.textContent = message;
+            toast.className = 'toast';
+            toast.classList.add('show');
+
+            if (type === 'success') {
+                toast.classList.add('toast-success');
+                toastIcon.className = 'fas fa-check-circle toast-icon';
+            } else if (type === 'error') {
+                toast.classList.add('toast-error');
+                toastIcon.className = 'fas fa-exclamation-circle toast-icon';
+            } else if (type === 'warning') {
+                toast.classList.add('toast-warning');
+                toastIcon.className = 'fas fa-exclamation-triangle toast-icon';
+            }
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        document.querySelector('.toast-close').addEventListener('click', function() {
+            document.getElementById('toast').classList.remove('show');
+        });
+        
+        // Smooth page transitions
+        document.addEventListener('DOMContentLoaded', function() {
+            const pageTransition = document.getElementById('pageTransition');
+            const links = document.querySelectorAll('a[href]:not([href^="#"]):not([target="_blank"])');
+            
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href.indexOf('#') !== 0 && href.indexOf('://') === -1) {
+                        e.preventDefault();
+                        pageTransition.style.opacity = 1;
+                        
+                        setTimeout(() => {
+                            window.location.href = href;
+                        }, 500);
+                    }
+                });
+            });
+            
+            // Hide transition overlay when page loads
+            window.addEventListener('pageshow', function() {
+                pageTransition.style.opacity = 0;
+            });
+            
+            // Update cart count
+            document.getElementById('cartCount').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+        });
+    </script>
+</body>
+</html>
