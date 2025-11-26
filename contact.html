@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | NeoTech Forge</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Smooth scrolling for the entire page */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Page transition effect */
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        
+        /* Enhanced navigation styles */
+        .header-container {
+            position: relative;
+            z-index: 100;
+            background: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(127, 90, 240, 0.1);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            position: relative;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--primary);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 1rem;
+            min-width: 1.5rem;
+            text-align: center;
+        }
+
+        /* Mobile menu styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: rgba(18, 18, 18, 0.95);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                padding: 1.5rem;
+                gap: 1rem;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                transform: translateY(-100%);
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.3s ease;
+                z-index: 1000;
+            }
+            
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: auto;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                color: var(--text);
+                font-size: 1.5rem;
+                cursor: pointer;
+                padding: 0.5rem;
+                transition: color 0.3s ease;
+            }
+
+            .mobile-menu-btn:hover {
+                color: var(--primary);
+            }
+        }
+        
+        /* Enhanced contact form */
+        .contact-form {
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        
+        .contact-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+        
+        .input-group input:focus,
+        .input-group textarea:focus {
+            animation: glow 1.5s infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 5px rgba(127, 90, 240, 0.3);
+            }
+            to {
+                box-shadow: 0 0 10px rgba(127, 90, 240, 0.6);
+            }
+        }
+        
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.7s ease;
+            z-index: -1;
+        }
+        
+        .btn-primary:hover::after {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: rgba(127, 90, 240, 0.8); /* Change hover background color */
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Transition Effect -->
+    <div class="page-transition" id="pageTransition"></div>
+    
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-microchip"></i>
+                <span>NeoTech Forge</span>
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="nav-links" id="navLinks">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="customize.html" class="nav-link">Build PC</a>
+                <a href="prebuilt.html" class="nav-link">Pre-Built PCs</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="login.html" class="nav-link">Account</a>
+                <a href="cart.html" class="nav-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartCount" class="cart-count">0</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Contact Us</h1>
+            <p>We'd love to hear from you! Get in touch with our team for support or inquiries.</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="grid grid-2">
+                <div class="contact-form">
+                    <div class="digital-noise"></div>
+                    <h2>Send Us a Message</h2>
+                    <form id="contactForm" class="auth-form">
+                        <div class="input-group">
+                            <i class="fas fa-user input-icon"></i>
+                            <input type="text" id="name" name="name" placeholder="Your Name" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-envelope input-icon"></i>
+                            <input type="email" id="email" name="email" placeholder="Your Email" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-phone input-icon"></i>
+                            <input type="tel" id="phone" name="phone" placeholder="Your Phone (Optional)">
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-comment input-icon"></i>
+                            <textarea id="message" name="message" placeholder="Your Message" rows="6" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary" style="width: 100%;">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                    </form>
+                </div>
+                <div class="contact-info">
+                    <h2>Contact Information</h2>
+                    <ul class="footer-links">
+                        <li class="footer-link">
+                            <a href="https://www.google.com/maps?q=Pillai+College+of+Engineering+and+Technology,+Navi+Mumbai" target="_blank">
+                                <i class="fas fa-map-marker-alt"></i> Pillai College of Engineering and Technology, Navi Mumbai
+                            </a>
+                        </li>
+                        <li class="footer-link">
+                            <i class="fas fa-phone"></i> +91 9028611069
+                        </li>
+                        <li class="footer-link">
+                            <i class="fas fa-envelope"></i> <a href="mailto:support@neotechforge.com">support@neotechforge.com</a>
+                        </li>
+                        <li class="footer-link">
+                            <i class="fas fa-clock"></i> Monday - Friday: 9:00 AM - 5:00 PM EST
+                        </li>
+                    </ul>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                    <div class="map-container" style="margin-top: 2rem;">
+                        <iframe 
+                            src="https://www.google.com/maps?q=Pillai+College+of+Engineering+and+Technology,+Navi+Mumbai&output=embed" 
+                            width="100%" 
+                            height="300" 
+                            style="border:0; border-radius: var(--radius-md);" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Need Help Building Your PC?</h2>
+                <p>Our team is here to assist you every step of the way. Start building today!</p>
+                <br>
+                <a href="customize.html" class="btn-primary">
+                    <i class="fas fa-tools"></i> Build Your PC
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3 class="footer-heading">NeoTech Forge</h3>
+                    <p>Your one-stop shop for custom PC builds and pre-built gaming computers.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-heading">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="index.html">Home</a></li>
+                        <li class="footer-link"><a href="customize.html">Build PC</a></li>
+                        <li class="footer-link"><a href="prebuilt.html">Pre-Built PCs</a></li>
+                        <li class="footer-link"><a href="about.html">About Us</a></li>
+                        <li class="footer-link"><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-heading">Support</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#">FAQs</a></li>
+                        <li class="footer-link"><a href="#">Shipping Policy</a></li>
+                        <li class="footer-link"><a href="#">Return Policy</a></li>
+                        <li class="footer-link"><a href="#">Warranty</a></li>
+                        <li class="footer-link"><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-heading">Contact Us</h3>
+                    <ul class="footer-links">
+                        <li class="footer-link">
+                            <a href="https://www.google.com/maps?q=Pillai+College+of+Engineering+and+Technology,+Navi+Mumbai" target="_blank">
+                                <i class="fas fa-map-marker-alt"></i> Pillai College of Engineering and Technology, Navi Mumbai
+                            </a>
+                        </li>
+                        <li class="footer-link"><i class="fas fa-phone"></i> +91 9028611069</li>
+                        <li class="footer-link"><i class="fas fa-envelope"></i> support@neotechforge.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 NeoTech Forge. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle toast-icon"></i>
+        <div class="toast-content">
+            <p class="toast-message">Message sent successfully!</p>
+        </div><footer>
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-column">
+                        <h3 class="footer-heading">NeoTech Forge</h3>
+                        <p>Your one-stop shop for custom PC builds and pre-built gaming computers.</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                    <div class="footer-column">
+                        <h3 class="footer-heading">Quick Links</h3>
+                        <ul class="footer-links">
+                            <li class="footer-link"><a href="index.html">Home</a></li>
+                            <li class="footer-link"><a href="customize.html">Build PC</a></li>
+                            <li class="footer-link"><a href="prebuilt.html">Pre-Built PCs</a></li>
+                            <li class="footer-link"><a href="about.html">About Us</a></li>
+                            <li class="footer-link"><a href="contact.html">Contact Us</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3 class="footer-heading">Support</h3>
+                        <ul class="footer-links">
+                            <li class="footer-link"><a href="#">FAQs</a></li>
+                            <li class="footer-link"><a href="#">Shipping Policy</a></li>
+                            <li class="footer-link"><a href="#">Return Policy</a></li>
+                            <li class="footer-link"><a href="#">Warranty</a></li>
+                            <li class="footer-link"><a href="#">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3 class="footer-heading">Contact Us</h3>
+                        <ul class="footer-links">
+                            <li class="footer-link">
+                                <a href="https://www.google.com/maps?q=Pillai+College+of+Engineering+and+Technology,+Navi+Mumbai" target="_blank">
+                                    <i class="fas fa-map-marker-alt"></i> Pillai College of Engineering and Technology, Navi Mumbai
+                                </a>
+                            </li>
+                            <li class="footer-link"><i class="fas fa-phone"></i> +91 9028611069</li>
+                            <li class="footer-link"><i class="fas fa-envelope"></i> support@neotechforge.com</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="copyright">
+                    <p>&copy; 2025 NeoTech Forge. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+        <button class="toast-close"><i class="fas fa-times"></i></button>
+    </div>
+
+    <script src="animations.js"></script>
+    <script>
+        // Direct mobile menu toggle for better reliability
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const icon = mobileMenuBtn.querySelector('i');
+            
+            navLinks.classList.toggle('active');
+            
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.replace('fa-bars', 'fa-times');
+            } else {
+                icon.classList.replace('fa-times', 'fa-bars');
+            }
+        }
+        
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('active');
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.replace('fa-bars', 'fa-times');
+            } else {
+                icon.classList.replace('fa-times', 'fa-bars');
+            }
+        });
+
+        // Contact form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const button = this.querySelector('button[type="submit"]');
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            button.disabled = true;
+
+            // Simulate API call
+            setTimeout(() => {
+                showToast('success', 'Message sent successfully!');
+                button.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+                button.disabled = false;
+                this.reset();
+            }, 1500);
+        });
+
+        // Toast notification
+        function showToast(type, message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.querySelector('.toast-message');
+            const toastIcon = document.querySelector('.toast-icon');
+
+            toastMessage.textContent = message;
+            toast.className = 'toast';
+            toast.classList.add('show');
+
+            if (type === 'success') {
+                toast.classList.add('toast-success');
+                toastIcon.className = 'fas fa-check-circle toast-icon';
+            } else if (type === 'error') {
+                toast.classList.add('toast-error');
+                toastIcon.className = 'fas fa-exclamation-circle toast-icon';
+            } else if (type === 'warning') {
+                toast.classList.add('toast-warning');
+                toastIcon.className = 'fas fa-exclamation-triangle toast-icon';
+            }
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        document.querySelector('.toast-close').addEventListener('click', function() {
+            document.getElementById('toast').classList.remove('show');
+        });
+        
+        // Smooth page transitions
+        document.addEventListener('DOMContentLoaded', function() {
+            const pageTransition = document.getElementById('pageTransition');
+            const links = document.querySelectorAll('a[href]:not([href^="#"]):not([target="_blank"])');
+            
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href.indexOf('#') !== 0 && href.indexOf('://') === -1) {
+                        e.preventDefault();
+                        pageTransition.style.opacity = 1;
+                        
+                        setTimeout(() => {
+                            window.location.href = href;
+                        }, 500);
+                    }
+                });
+            });
+            
+            // Hide transition overlay when page loads
+            window.addEventListener('pageshow', function() {
+                pageTransition.style.opacity = 0;
+            });
+            
+            // Update cart count
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            document.getElementById('cartCount').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+        });
+    </script>
+</body>
+</html>
