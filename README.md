@@ -67,11 +67,12 @@ NeoTech-Forge/
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/YOUR_USERNAME/NeoTech-Forge.git
+git clone https://github.com/babuthecodemaster/NeoTech-Forge.git
 cd NeoTech-Forge
 ```
 
 2. Configure database connection:
+   - Copy `db_connect.example.php` to `db_connect.php`
    - Update `db_connect.php` with your database credentials
    - Import `database.sql` to set up the MySQL database
 
@@ -79,6 +80,8 @@ cd NeoTech-Forge
    - Run `DB/mongo_setup.js` to initialize MongoDB collections
 
 4. Configure payment gateway:
+   - Copy `config/paytm_config.example.php` to `config/paytm_config.php`
+   - Sign up for a Paytm merchant account at https://business.paytm.com/
    - Update `config/paytm_config.php` with your Paytm credentials
 
 5. Set up web server to point to the project directory
@@ -87,11 +90,11 @@ cd NeoTech-Forge
 
 ## Configuration
 
-Make sure to update the following configuration files with your credentials:
-- `db_connect.php` - Database connection settings
-- `config/paytm_config.php` - Paytm payment gateway credentials
+Example configuration files are provided:
+- `db_connect.example.php` → Copy to `db_connect.php` and update with your credentials
+- `config/paytm_config.example.php` → Copy to `config/paytm_config.php` and update with your credentials
 
-**Note**: Never commit sensitive credentials to the repository. Use environment variables or separate config files that are gitignored.
+**Security Note**: The actual config files (`db_connect.php` and `config/paytm_config.php`) are gitignored to protect your sensitive credentials. Never commit these files to version control.
 
 ## Usage
 
